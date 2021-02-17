@@ -4,44 +4,48 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 
- const app = express();
+const app = express();
+app.use(cookieParser());
 
+app.use(bodyParser.urlencoded({extended: true})); //For frontend with EJS
 
+ app.get("/", (req, res) => {
 
-/* Retrieving values from the form ejs template*/
-app.use(bodyParser.urlencoded({extended: true}));
-
-
-
- /* Loading our home route */
- app.get("/", function (req, res) {
-
-    res.end("Home");
-     // res.redirect("/");
+    res.end("Welcome Home");
 
    });
 
-  app.post("/private", function (req, res) {
-  res.status(200).send("Login get endpoint");
+   app.get("/test/:anything", (req, res) => {
+
+    res.send(req.params.anything); //Return whatever the user inserts into the params
+
+   });
+
+app.get("/login/:name/:passphrase", (req, res) => {
+  if(req.cookies.NodeServerSiteCookie === undefined) {
+    res.cookie(`NodeServerSiteCookie`, `${req.params.name + req.params.passphrase}`, {maxAge: 100000, httpOnly: true});
+    res.end("Your Cookie was created successfully ");
+  } else if (req.cookies.NodeServerSiteCookie) {
+    // res.end(`Welcome back ${req.params.name}`);
+    res.redirect(200,"/private");
+  }
 });
 
+app.get("/login", (req, res) => {
+  if(req.cookies.NodeServerSiteCookie === undefined) {
+   res.send("enter your username and passphrase like : /login/Brian/testing1234");
+  } else if (req.cookies.NodeServerSiteCookie) {
+    // res.end(`Welcome back ${req.params.name}`);
+    res.redirect(200,"/private");
+  }
+});
 
-// const http = require('http'); // Simple Node
-
-// const hostname = '127.0.0.1';
-// const port = 3000;
-
-// const server = http.createServer((req, res) => {
-//   res.statusCode = 200;
-//   res.setHeader('Content-Type', 'text/plain');
-//   res.end('Hello World');
-// });
-
-// server.listen(port, hostname, () => {
-//   console.log(`Server running at http://${hostname}:${port}/`);
-// });
-
-
+app.get("/private", (req, res) => {
+  if (!req.cookies.NodeServerSiteCookie) { res.send("You may not enter!!!");} else {
+res.status(200).json({ secret: "Welcome to the secret... secret... place..." });
+  }
+  
+});
 
 
 let port = 3005;
