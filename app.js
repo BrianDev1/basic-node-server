@@ -11,38 +11,38 @@ app.use(bodyParser.urlencoded({extended: true})); //For frontend with EJS
 
  app.get("/", (req, res) => {
 
-    res.end("Welcome Home");
+    res.write("Welcome to Brian's Home");
+    res.end();
 
    });
 
    app.get("/test/:anything", (req, res) => {
-
     res.send(req.params.anything); //Return whatever the user inserts into the params
-
    });
 
 app.get("/login/:name/:passphrase", (req, res) => {
   if(req.cookies.NodeServerSiteCookie === undefined) {
     res.cookie(`NodeServerSiteCookie`, `${req.params.name + req.params.passphrase}`, {maxAge: 100000, httpOnly: true});
-    res.end("Your Cookie was created successfully ");
+    res.write(`Your Cookie was created successfully ${req.params.name}`);
+    res.end();
+    
   } else if (req.cookies.NodeServerSiteCookie) {
-    // res.end(`Welcome back ${req.params.name}`);
-    res.redirect(200,"/private");
+    res.write(`Welcome back ${req.params.name}`);
+    setTimeout(function(){ res.write("\nhead over to --> /private");res.end();}, 1000);
   }
 });
 
 app.get("/login", (req, res) => {
   if(req.cookies.NodeServerSiteCookie === undefined) {
-   res.send("enter your username and passphrase like : /login/Brian/testing1234");
+   res.send("Enter your username and passphrase like: /login/Brian/testing1234 into the URL");
   } else if (req.cookies.NodeServerSiteCookie) {
-    // res.end(`Welcome back ${req.params.name}`);
-    res.redirect(200,"/private");
+    res.redirect("/private");
   }
 });
 
 app.get("/private", (req, res) => {
   if (!req.cookies.NodeServerSiteCookie) { res.send("You may not enter!!!");} else {
-res.status(200).json({ secret: "Welcome to the secret... secret... place..." });
+    res.status(200).json({ secret: "Welcome to the secret... secret... place..." });
   }
   
 });
