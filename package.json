@@ -1,0 +1,24 @@
+{
+  "name": "serverproject",
+  "version": "1.0.0",
+  "description": "basic server with node and express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrianDev1/basic-node-server.git"
+  },
+  "author": "Brian Rudolph",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BrianDev1/basic-node-server/issues"
+  },
+  "homepage": "https://github.com/BrianDev1/basic-node-server#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7"
+  }
+}
